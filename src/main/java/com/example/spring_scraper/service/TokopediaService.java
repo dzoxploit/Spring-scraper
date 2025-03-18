@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 import com.example.spring_scraper.model.Product;
 import com.example.spring_scraper.model.ProductDetail;
+import com.example.spring_scraper.config.NumberExtractorConfig;
 
 @Service
 public class TokopediaService {
@@ -46,12 +47,15 @@ public class TokopediaService {
         List<Product> productDetail = new ArrayList<>();
 
         try {
+            NumberExtractorConfig config = NumberExtractorConfig.getInstance();
+            
             Document doc = Jsoup.connect(productUrl).userAgent("Mozila/5.0").get();
             
             String title = doc.select("h1 .css-j63za0").text();
             String category = doc.select("li .css-1i6xy22 a b").text();
-            String minimumQuantity = doc.select(null).text()
-            String price;
+            String description = doc.select("div[data-testid=lblPDPDescriptionProduk]").text();
+            String priceTemporary = doc.select("p[data-testid=pdpProductPrice]").text();
+            Integer price = config.convertToInteger(priceTemporary);
             String mainImageUrl;
             List<String> detailImageUrl;
             String countProduct;

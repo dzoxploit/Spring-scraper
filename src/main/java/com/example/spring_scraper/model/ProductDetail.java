@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class ProductDetail {
     private String title;
     private String category;
-    private String minimumQuantity;
+    private String description;
     private String price;
     private String mainImageUrl;
     private List<String> detailImageUrl;
