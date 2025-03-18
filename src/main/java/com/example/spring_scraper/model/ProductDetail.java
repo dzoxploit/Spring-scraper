@@ -1,5 +1,7 @@
 package com.example.spring_scraper.model;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,12 +10,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+public class ProductDetail {
     private String title;
+    private String category;
+    private String minimumQuantity;
     private String price;
-    private String imageUrl;
+    private String mainImageUrl;
+    private List<String> detailImageUrl;
     private String productUrl;
     private String countProduct;
+    private String ratingProduct;
+    private String countRatingProduct;
     private String shopName;
-    private String placeShop;
 }
