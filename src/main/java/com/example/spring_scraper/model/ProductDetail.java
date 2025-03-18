@@ -14,12 +14,10 @@ public class ProductDetail {
     private String title;
     private String category;
     private String description;
-    private String price;
+    private Integer price;
     private String mainImageUrl;
-    private List<String> detailImageUrl;
-    private String productUrl;
     private String countProduct;
     private String ratingProduct;
-    private String countRatingProduct;
+    private Integer countRatingProduct;
     private String shopName;
 }

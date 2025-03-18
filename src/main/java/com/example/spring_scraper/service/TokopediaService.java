@@ -34,7 +34,7 @@ public class TokopediaService {
                 String shopName = productElement.select("span .T0rpy-LEwYNQifsgB").text();
                 String placeShop = productElement.select("span .pC8DMVkBZGW7-egObcWMFQ==").text();
 
-                products.add(new Product(title, productUrl, imageUrl, price, shopName, placeShop, countProduct))
+                products.add(new Product(title, productUrl, imageUrl, price, shopName, placeShop, countProduct));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -44,26 +44,29 @@ public class TokopediaService {
 
     public List<ProductDetail> detailTokopediaProduct(String productUrl){
         
-        List<Product> productDetail = new ArrayList<>();
+        List<ProductDetail> productDetail = new ArrayList<>();
 
         try {
             NumberExtractorConfig config = NumberExtractorConfig.getInstance();
             
             Document doc = Jsoup.connect(productUrl).userAgent("Mozila/5.0").get();
-            
+        
             String title = doc.select("h1 .css-j63za0").text();
             String category = doc.select("li .css-1i6xy22 a b").text();
             String description = doc.select("div[data-testid=lblPDPDescriptionProduk]").text();
             String priceTemporary = doc.select("p[data-testid=pdpProductPrice]").text();
             Integer price = config.convertToInteger(priceTemporary);
-            String mainImageUrl;
-            List<String> detailImageUrl;
-            String countProduct;
-            String ratingProduct;
-            String countRatingProduct;
-            String shopName;
+            String mainImageUrl = doc.select("img[data-testid=PDPMainImage]").attr("src");
+            String countProduct = doc.select("p[data-testid=lblPDPDetailProductSoldCounter]").text();
+            String ratingProduct = doc.select("span[data-testid=lblPDPDetailProductRatingNumber]").text();
+            String countRatingProductTemp = doc.select("span[data-testid=lblPDPDetailProductRatingCounter]").text();
+            Integer countRatingProduct = config.convertToInteger(countRatingProductTemp);
+            String shopName = doc.select("h2 .css-nc7wd7-unf-heading .e1qvo2ff2").text();
+
+            productDetail.add(new ProductDetail(title, category, description, price, mainImageUrl, countProduct, ratingProduct, countRatingProduct, shopName));
         } catch (Exception e) {
             // TODO: handle exception
+            e.printStackTrace();
         }        
         return null;
     }
