@@ -2,6 +2,8 @@ package com.example.spring_scraper.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.logging.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,25 +16,29 @@ import com.example.spring_scraper.config.NumberExtractorConfig;
 @Service
 public class TokopediaService {
 
-    private static final String TOKPED_SEARCH_URL = "https://www.tokopedia.com/search?st=&q";
+    private static final String TOKPED_SEARCH_URL = "https://www.tokopedia.com/search?st=&q=";
 
-    public List<Product> getAllTokopedia(int page, int size, String search) {
+    public List<Product> getAllTokopedia(String search) {
         
         List<Product> products = new ArrayList<>();
 
+        String searchFinal = TOKPED_SEARCH_URL + search;
+
+        System.err.println(searchFinal);
+        
         try {
-            Document doc = Jsoup.connect(TOKPED_SEARCH_URL).userAgent("Mozila/5.0").get();
+            Document doc = Jsoup.connect(searchFinal).userAgent("Mozila/5.0").get();
             
             Elements productElements = doc.select("div .css-jza1fo .css-5wh65g");
 
             for(Element productElement : productElements){
-                String title = productElement.select("span ._0T8-iGxMpV6NEsYEhwkqEg==").text();
-                String productUrl = productElement.select("a oQ94Awb6LlTiGByQZo8Lyw== .IM26HEnTb-krJayD-R0OHw==").attr("href");
-                String imageUrl = productElement.select("img .css-1c345mg .NWVIhquIvF0Jc0Qlizjluw==").attr("src");
-                String price = productElement.select("div ._67d6E1xDKIzw+i2D2L0tjw==").text();
-                String countProduct = productElement.select("span .se8WAnkjbVXZNA8mT+Veuw==").text();
+                String title = productElement.select("span").text();
+                String price = productElement.select("a").attr("href");
+                String imageUrl = productElement.select("img .css-1c345mg").attr("src");
+                String productUrl = productElement.select("div").text();
+                String countProduct = productElement.select("span").text();
                 String shopName = productElement.select("span .T0rpy-LEwYNQifsgB").text();
-                String placeShop = productElement.select("span .pC8DMVkBZGW7-egObcWMFQ==").text();
+                String placeShop = productElement.select("span").text();
 
                 products.add(new Product(title, productUrl, imageUrl, price, shopName, placeShop, countProduct));
             }
@@ -68,6 +74,6 @@ public class TokopediaService {
             // TODO: handle exception
             e.printStackTrace();
         }        
-        return null;
+        return productDetail;
     }
 }
