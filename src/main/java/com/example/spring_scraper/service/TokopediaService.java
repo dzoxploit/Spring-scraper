@@ -53,23 +53,20 @@ public class TokopediaService {
         List<ProductDetail> productDetail = new ArrayList<>();
 
         try {
-            NumberExtractorConfig config = NumberExtractorConfig.getInstance();
             
             Document doc = Jsoup.connect(productUrl).userAgent("Mozila/5.0").get();
         
-            String title = doc.select("h1 .css-j63za0").text();
-            String category = doc.select("li .css-1i6xy22 a b").text();
+            String title = doc.select("h1[data-testid=lblPDPDetailProductName]").text();
+            String category = doc.select("ul[data-testid=lblPDPInfoProduk]").text();
             String description = doc.select("div[data-testid=lblPDPDescriptionProduk]").text();
             String priceTemporary = doc.select("p[data-testid=pdpProductPrice]").text();
-            Integer price = config.convertToInteger(priceTemporary);
             String mainImageUrl = doc.select("img[data-testid=PDPMainImage]").attr("src");
-            String countProduct = doc.select("p[data-testid=lblPDPDetailProductSoldCounter]").text();
+            String countProduct = doc.select("p[data-testid=stock-label] b").text();
             String ratingProduct = doc.select("span[data-testid=lblPDPDetailProductRatingNumber]").text();
-            String countRatingProductTemp = doc.select("span[data-testid=lblPDPDetailProductRatingCounter]").text();
-            Integer countRatingProduct = config.convertToInteger(countRatingProductTemp);
-            String shopName = doc.select("h2 .css-nc7wd7-unf-heading .e1qvo2ff2").text();
+            String countRatingProduct = doc.select("span[data-testid=lblPDPDetailProductRatingNumber]").text();
+            String shopName = doc.select("h2 .css-nc7wd7-unf-heading").text();
 
-            productDetail.add(new ProductDetail(title, category, description, price, mainImageUrl, countProduct, ratingProduct, countRatingProduct, shopName));
+            productDetail.add(new ProductDetail(title, category, description, priceTemporary, mainImageUrl, countProduct, ratingProduct, countRatingProduct, shopName));
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
